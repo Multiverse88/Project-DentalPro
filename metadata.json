@@ -1,0 +1,6 @@
+{
+  "name": "DentalRecord Pro",
+  "description": "A web application for managing dental patient records, including dental charts, treatment history, and patient information.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
