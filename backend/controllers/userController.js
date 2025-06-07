@@ -11,6 +11,9 @@ const userController = {
       const salt = await bcrypt.genSalt(10);
       const password_hash = await bcrypt.hash(password, salt);
 
+      // Debug log
+      console.log('Registering user with:', { username, email, password, password_hash });
+
       // Check if user already exists (optional but recommended)
       const existingUser = await userModel.findUserByEmail(email); // Assuming you add this model function later
       if (existingUser) {
@@ -48,8 +51,13 @@ const userController = {
 
       // If passwords match, generate JWT
       if (isMatch) {
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET || 'your_jwt_secret', { expiresIn: '1h' }); // Use environment variable for secret
-        res.status(200).json({ token });
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET || 'your_jwt_secret', { expiresIn: '1h' });
+        // Return user data without password
+        const { password_hash: _, ...userWithoutPassword } = user;
+        res.status(200).json({ 
+          token,
+          user: userWithoutPassword
+        });
       } else {
         res.status(401).json({ message: 'Invalid credentials' });
       }
